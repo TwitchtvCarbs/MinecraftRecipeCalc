@@ -5,7 +5,7 @@ extends Node
 # var b = "textvar"
 
 func _ready():
-	#print(String(Global_Recipe_Create_Database.get_recipe("minecraft:acacia_planks")))
+	$Label.text = Global_Recipe_Create_Database.recipe_output
 	pass
 
 #func _process(delta):

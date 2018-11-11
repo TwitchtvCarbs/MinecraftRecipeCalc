@@ -20,9 +20,10 @@ Global_Recipe_Create_Database="*res://Database/Global_Recipe_Create_Database.gd"
 
 [display]
 
-window/size/width=400
-window/size/test_width=400
-window/size/test_height=600
+window/size/width=600
+window/size/height=800
+window/size/test_width=600
+window/size/test_height=800
 
 [rendering]
 
