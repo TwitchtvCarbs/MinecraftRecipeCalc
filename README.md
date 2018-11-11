@@ -1,5 +1,5 @@
-#Minecraft Recipe Project
-##Objectives:
+# Minecraft Recipe Project
+## Objectives:
 1. Get recipe data from recipe json files.
 
 2. Create a database with those recipes.
