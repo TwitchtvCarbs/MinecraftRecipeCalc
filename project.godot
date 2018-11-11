@@ -13,6 +13,17 @@ config_version=3
 config/name="Minecraft Recipe Calc"
 config/icon="res://icon.png"
 
+[autoload]
+
+Global_DataParser="*res://Database/Global_DataParser.gd"
+Global_Recipe_Create_Database="*res://Database/Global_Recipe_Create_Database.gd"
+
+[display]
+
+window/size/width=400
+window/size/test_width=400
+window/size/test_height=600
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
