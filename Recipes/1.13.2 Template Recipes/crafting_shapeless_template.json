@@ -1,0 +1,13 @@
+{
+  "type": "crafting_shapeless",
+  "group": "group",
+  "ingredients": [
+    {
+      "item": "minecraft:inputItem"
+    }
+  ],
+  "result": {
+    "item": "minecraft:outputItem",
+    "count": 1 // This may not be in all recipes or any at all.
+  }
+}

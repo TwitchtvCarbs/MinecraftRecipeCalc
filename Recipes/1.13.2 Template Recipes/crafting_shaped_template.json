@@ -1,0 +1,24 @@
+{
+  "type": "crafting_shaped",
+  "group":"group",
+  "pattern": [
+    "GGG",
+    "GSG",
+    "OOO"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:inputItem1"
+    },
+    "G": {
+      "item": "minecraft:inputItem2"
+    },
+    "O": {
+      "item": "minecraft:inputItem3"
+    }
+  },
+  "result": {
+    "item": "minecraft:outputItem",
+    "count": 1
+  }
+}
