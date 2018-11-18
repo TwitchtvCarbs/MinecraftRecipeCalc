@@ -63,7 +63,7 @@ func get_recipe():
 
 	#GROUP
 	if itemData.has("group"):
-		recipe.append(itemData["group"]) #1
+		recipe.push_back(itemData["group"]) #1
 	else:
 		hasGroup = false
 
