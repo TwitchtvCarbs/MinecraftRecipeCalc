@@ -5,7 +5,7 @@ extends Node
 # var b = "textvar"
 
 func _ready():
-	$Label.text = Global_Recipe_Create_Database.recipe_output
+	##$Label.text = Global_Recipe_Create_Database.recipe_output
 	pass
 
 #func _process(delta):
