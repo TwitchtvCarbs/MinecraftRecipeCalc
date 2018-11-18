@@ -28,6 +28,8 @@ func _ready():
 		item_group = get_recipe()[1]
 	else:
 		item_group = "None"
+		
+	print(hasGroup)
 
 	#INGREDIENTS / INPUT
 	if hasTag == true:#If the input item has a tag then use it if not use item.
@@ -64,6 +66,7 @@ func get_recipe():
 	#GROUP
 	if itemData.has("group"):
 		recipe.push_back(itemData["group"]) #1
+		hasGroup = true
 	else:
 		hasGroup = false
 
