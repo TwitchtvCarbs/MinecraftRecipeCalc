@@ -30,8 +30,7 @@ func _ready():
 	else:
 		arrayModifier = -1
 		item_group = "None"
-		
-	print(hasGroup)
+
 
 	#INGREDIENTS / INPUT
 	if hasTag == true:#If the input item has a tag then use it if not use item.
@@ -46,7 +45,7 @@ func _ready():
 	if output_amount != 1:#If the output amount is more then 1 then get how many.
 		output_amount = get_recipe()[arrayModifier+3][1]
 	else:#Othewise get output and set the output amount to 1.
-		output_amount = get_recipe()[arrayModifier+3]
+		output_amount = 1
 	
 	
 	#STRING OUTPUT
