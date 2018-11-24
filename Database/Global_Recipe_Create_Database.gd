@@ -1,6 +1,6 @@
 extends Node
 
-var recipeToLoad = "piston"
+var recipeToLoad = "flint_and_steel"
 
 var url_database_recipe = "res://Recipes//1.13.2 JsonRecipes//"+String(recipeToLoad)+".json"
 var recipe_type
@@ -39,7 +39,6 @@ func _ready():
 			#GET PATERN
 			var pattern = []
 			pattern = get_recipe_shaped()[arrayModifier+2]
-			print("Pattern: "+String(pattern))
 			
 			#GET KEYS
 			var keys = []
@@ -64,11 +63,11 @@ func _ready():
 			for a in keys.size():
 				if get_recipe_shaped()[arrayModifier+3].values()[a].has("item"):
 					input_item[a] = get_recipe_shaped()[arrayModifier+3].values()[a]["item"]
-					inputString += String(input_amount[a])+" "+ String(input_item[a])+"\n"
 				elif get_recipe_shaped()[arrayModifier+3].values()[a].has("tag"):
 					input_item[a] = get_recipe_shaped()[arrayModifier+3].values()[a]["tag"]
-					inputString += String(input_amount[a])+" "+ String(input_item[a])+"\n"
 				#Create input item and amount string.
+				inputString += String(input_amount[a])+" "+ String(input_item[a])+"\n"
+				
 			
 			#RESULT / OUTPUT
 			output_item = get_recipe_shaped()[arrayModifier+4][0]
@@ -93,10 +92,20 @@ func _ready():
 					item_group = "None"
 					
 				#INGREDIENTS / INPUT
-				if hasTag == true:#If the input item has a tag then use it if not use item.
-					input_item = get_recipe_shapeless()[arrayModifier+2][0]["tag"]	
-				else:
-					input_item = get_recipe_shapeless()[arrayModifier+2][0]["item"]
+				#GET INGREDIENTS
+				var ingredients_list = []
+				
+				ingredients_list = get_recipe_shapeless()[arrayModifier+2]
+				input_amount.resize(ingredients_list.size())
+				input_item.resize(ingredients_list.size())
+				print(ingredients_list)
+				for a in ingredients_list.size():
+					if ingredients_list[a].has("item"):
+						input_item[a] = ingredients_list[a]["item"]
+					elif ingredients_list[a].has("tag"):
+						input_item[a] = ingredients_list[a]["tag"]
+					#Create input item and amount strings
+					inputString += "1 "+ String(input_item[a])+"\n"
 					
 				#RESULT / OUTPUT
 				output_item = get_recipe_shapeless()[arrayModifier+3][0]
@@ -106,12 +115,9 @@ func _ready():
 				else:#Othewise get output and set the output amount to 1.
 					output_amount = 1
 				#STRING OUTPUT
-				recipe_output = "Type: "+String(recipe_type)+"\n"+"Group: "+String(item_group)+"\n"+"Input: "+String(input_amount)+" "+String(input_item) +"\n"+"Output: "+String(output_amount)+" "+String(output_item)
-
+				recipe_output = "Type: "+String(recipe_type)+"\n"+"Group: "+String(item_group)+"\n\n"+"Input: "+String(inputString)+"\n"+"Output: "+"\n"+String(output_amount)+" "+String(output_item)
 
 #Functions
-
-
 func get_recipe_shapeless():
 	#DOES RECIPE EXIST? If not then skip with a print message.
 	if !itemData.has("result"):
@@ -120,12 +126,6 @@ func get_recipe_shapeless():
 	
 	#INGREDIENTS / INPUT
 	recipe.push_back(itemData["ingredients"]) #2
-
-	#INGREDIENTS / INPUT AMOUNT
-	if itemData["ingredients"].size()<=1:
-		input_amount = 1
-	else:
-		input_amount = 0
 
 	#TAG
 	if itemData["ingredients"][0].has("tag"):
@@ -154,17 +154,6 @@ func get_recipe_shaped():
 
 	#INGREDIENTS / INPUT
 	recipe.push_back(itemData["pattern"]) #2
-
-	#INGREDIENTS / INPUT AMOUNT
-	#for x in [itemData["pattern"].size()]:
-	#	print("This is a line in the recipe.")
-	#itemData["pattern"].size()<=1:
-	
-	#TAG
-	#if itemData["ingredients"][0].has("tag"):
-	#	hasTag = true
-	#else:
-	#	hasTag = false
 	
 	#KEYS
 	recipe.push_back(itemData["key"]) #3
