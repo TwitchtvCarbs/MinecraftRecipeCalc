@@ -1,6 +1,6 @@
 extends Node
 
-var recipeToLoad = "acacia_boat"
+var recipeToLoad = "flint_and_steel"
 
 var url_database_recipe = "res://Recipes//1.13.2 JsonRecipes//"+String(recipeToLoad)+".json"
 var recipe_type
@@ -11,8 +11,7 @@ var inputString = "\n"
 var output_item
 var output_amount
 var item_group
-var hasTag = false 
-var hasGroup = false
+var hasTag
 var arrayModifier = 0 #Used when an recipe doesn't have a group and sets to one less then recipes with a group.
 var itemData = {}#Create a dictionary for temp items recipe data
 var recipe = []
@@ -30,12 +29,13 @@ func _ready():
 	match(recipe_type):#Shapless, Shaped or Smelting Recipe
 		"crafting_shaped":
 			#GROUP
-			if hasGroup == true:
+			if itemData.has("group"):
+				recipe.push_back(itemData["group"]) #1
 				item_group = get_recipe_shaped()[arrayModifier+1]
 			else:
 				arrayModifier = -1
 				item_group = "None"
-
+			
 			#GET PATERN
 			var pattern = []
 			pattern = get_recipe_shaped()[arrayModifier+2]
@@ -62,10 +62,9 @@ func _ready():
 					
 			#What are the input items?		###*#*#*#*#### This isnt working yet!
 			for a in keys.size():
-				input_item[a] = get_recipe_shaped()[arrayModifier+3]
+				input_item[a] = get_recipe_shaped()[arrayModifier+3].values()[a]
+				inputString += String(input_amount[a])+" "+ String(input_item[a])+"\n"
 				#Create input item and amount string.
-				#inputString.insert(1,String (input_amount[a]) + " " + String(input_item[a])+"\n")
-				#print (String (input_amount[a]) + " " + String(input_item[a])+"\n")
 			
 			#RESULT / OUTPUT
 			output_item = get_recipe_shaped()[arrayModifier+4][0]
@@ -77,16 +76,18 @@ func _ready():
 			
 			
 			#STRING OUTPUT
-			recipe_output = "Type: "+String(recipe_type)+"\n"+"Group: "+String(item_group)+"\n"+"Input: "+String(inputString)+"Output: "+String(output_amount)+" "+String(output_item)
+			recipe_output = "Type: "+String(recipe_type)+"\n"+"Group: "+String(item_group)+"\n\n"+"Input: "+String(inputString)+"\n"+"Output: "+"\n"+String(output_amount)+" "+String(output_item)
 		
 		"crafting_shapeless":
 				#SHAPELESS RECIPES
 				#GROUP
-				if hasGroup == true:
+				if itemData.has("group"):
+					recipe.push_back(itemData["group"]) #1
 					item_group = get_recipe_shapeless()[arrayModifier+1]
 				else:
 					arrayModifier = -1
 					item_group = "None"
+					
 				#INGREDIENTS / INPUT
 				if hasTag == true:#If the input item has a tag then use it if not use item.
 					input_item = get_recipe_shapeless()[arrayModifier+2][0]["tag"]	
@@ -112,14 +113,7 @@ func get_recipe_shapeless():
 	if !itemData.has("result"):
 		print ("This recipe does not exist!")
 		return
-
-	#GROUP
-	if itemData.has("group"):
-		recipe.push_back(itemData["group"]) #1
-		hasGroup = true
-	else:
-		hasGroup = false
-
+	
 	#INGREDIENTS / INPUT
 	recipe.push_back(itemData["ingredients"]) #2
 
@@ -153,15 +147,6 @@ func get_recipe_shaped():
 	if !itemData.has("result"):
 		print ("This recipe does not exist!")
 		return
-
-	#GROUP
-	if itemData.has("group"):
-		recipe.push_back(itemData["group"]) #1
-		hasGroup = true
-	else:
-		hasGroup = false
-
-	##print(itemData)
 
 	#INGREDIENTS / INPUT
 	recipe.push_back(itemData["pattern"]) #2
