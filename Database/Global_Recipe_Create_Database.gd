@@ -1,6 +1,6 @@
 extends Node
 
-var recipeToLoad = "flint_and_steel"
+var recipeToLoad = "piston"
 
 var url_database_recipe = "res://Recipes//1.13.2 JsonRecipes//"+String(recipeToLoad)+".json"
 var recipe_type
@@ -60,10 +60,14 @@ func _ready():
 				for z in temp.size():
 					input_amount[a] = temp.count(keys[a])
 					
-			#What are the input items?		###*#*#*#*#### This isnt working yet!
+			#What are the input items?
 			for a in keys.size():
-				input_item[a] = get_recipe_shaped()[arrayModifier+3].values()[a]
-				inputString += String(input_amount[a])+" "+ String(input_item[a])+"\n"
+				if get_recipe_shaped()[arrayModifier+3].values()[a].has("item"):
+					input_item[a] = get_recipe_shaped()[arrayModifier+3].values()[a]["item"]
+					inputString += String(input_amount[a])+" "+ String(input_item[a])+"\n"
+				elif get_recipe_shaped()[arrayModifier+3].values()[a].has("tag"):
+					input_item[a] = get_recipe_shaped()[arrayModifier+3].values()[a]["tag"]
+					inputString += String(input_amount[a])+" "+ String(input_item[a])+"\n"
 				#Create input item and amount string.
 			
 			#RESULT / OUTPUT
