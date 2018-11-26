@@ -1,6 +1,5 @@
 extends Node
-
-var recipeToLoad = "flint_and_steel"
+var recipeToLoad = "diamond_axe"
 
 var url_database_recipe = "res://Recipes//1.13.2 JsonRecipes//"+String(recipeToLoad)+".json"
 var recipe_type
@@ -16,10 +15,23 @@ var arrayModifier = 0 #Used when an recipe doesn't have a group and sets to one 
 var itemData = {}#Create a dictionary for temp items recipe data
 var recipe = []
 
-
-
-
-func _ready():
+func init(loadRecipe):
+	recipeToLoad = loadRecipe
+	url_database_recipe = "res://Recipes//1.13.2 JsonRecipes//"+String(recipeToLoad)+".json"
+	recipe_type = null
+	recipe_output = null
+	input_item = []
+	input_amount = []
+	inputString = "\n"
+	output_item = null
+	output_amount = null
+	item_group = null
+	hasTag = null
+	arrayModifier = 0 #Used when an recipe doesn't have a group and sets to one less then recipes with a group.
+	itemData = {}#Create a dictionary for temp items recipe data
+	recipe = []
+	
+func _run():
 	itemData = Global_DataParser.load_data(url_database_recipe)
 	#TYPE
 	recipe.push_back(itemData["type"]) #0

@@ -16,6 +16,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Global_DataParser="*res://Database/Global_DataParser.gd"
+Main="*res://GUI/Main.gd"
 Global_Recipe_Create_Database="*res://Database/Global_Recipe_Create_Database.gd"
 
 [display]

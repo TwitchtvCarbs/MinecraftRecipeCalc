@@ -1,11 +1,10 @@
-extends Node
+extends OptionButton
 
 # class member variables go here, for example:
 # var a = 2
 # var b = "textvar"
 
 func _ready():
-	$Label.text = Global_Recipe_Create_Database.recipe_output
 	pass
 
 #func _process(delta):
