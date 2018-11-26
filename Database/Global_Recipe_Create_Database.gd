@@ -32,10 +32,16 @@ func init(loadRecipe):
 	recipe = []
 	
 func _run():
+	#DOES RECIPE EXIST? If not then skip with a print message.
+	var file2check = File.new()
+	if !file2check.file_exists(url_database_recipe):
+		recipe_output="This recipe does not exist!"
+		print ("This recipe does not exist!")
+		return
+		
 	itemData = Global_DataParser.load_data(url_database_recipe)
 	#TYPE
 	recipe.push_back(itemData["type"]) #0
-
 	recipe_type = recipe[0]
 
 	match(recipe_type):#Shapless, Shaped or Smelting Recipe
@@ -131,11 +137,6 @@ func _run():
 
 #Functions
 func get_recipe_shapeless():
-	#DOES RECIPE EXIST? If not then skip with a print message.
-	if !itemData.has("result"):
-		print ("This recipe does not exist!")
-		return
-	
 	#INGREDIENTS / INPUT
 	recipe.push_back(itemData["ingredients"]) #2
 
@@ -158,11 +159,6 @@ func get_recipe_shapeless():
 	
 	
 func get_recipe_shaped():
-	
-	#DOES RECIPE EXIST? If not then skip with a print message.
-	if !itemData.has("result"):
-		print ("This recipe does not exist!")
-		return
 
 	#INGREDIENTS / INPUT
 	recipe.push_back(itemData["pattern"]) #2
