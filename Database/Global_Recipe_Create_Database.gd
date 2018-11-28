@@ -132,7 +132,7 @@ func _run():
 				else:#Othewise get output and set the output amount to 1.
 					output_amount = 1
 				#STRING OUTPUT
-				recipe_output = "Type: "+String(recipe_type)+"\n"
+				recipe_output =  "Type: "+String(recipe_type)+"\n"
 				recipe_output += "Group: "+String(item_group)+"\n\n"
 				recipe_output += "Input: "+String(inputString)+"\n"
 				recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)
@@ -154,7 +154,7 @@ func _run():
 			cook_time = get_recipe_smelting()[arrayModifier+4]
 			smelt_xp = get_recipe_smelting()[arrayModifier+5]
 
-			recipe_output = "Type: "+String(recipe_type)+"\n"
+			recipe_output =  "Type: "+String(recipe_type)+"\n"
 			recipe_output += "Group: "+String(item_group)+"\n\n"
 			recipe_output += "Input: "+"\n"+String(inputString)+"\n"
 			recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n"

@@ -26,6 +26,10 @@ window/size/height=800
 window/size/test_width=800
 window/size/test_height=800
 
+[editor_plugins]
+
+enabled=PoolStringArray( "scene_notes" )
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
