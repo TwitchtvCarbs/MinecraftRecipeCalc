@@ -1,11 +1,13 @@
 extends Node
-var recipeToLoad = "diamond_axe"
+var recipeToLoad = "stone_slab"
 
 var url_database_recipe = "res://Recipes//1.13.2 JsonRecipes//"+String(recipeToLoad)+".json"
 var recipe_type
 var recipe_output
 var input_item = []
 var input_amount = []
+var cook_time
+var smelt_xp
 var inputString = "\n"
 var output_item
 var output_amount
@@ -22,6 +24,8 @@ func init(loadRecipe):
 	recipe_output = null
 	input_item = []
 	input_amount = []
+	cook_time = null
+	smelt_xp = null
 	inputString = "\n"
 	output_item = null
 	output_amount = null
@@ -38,22 +42,23 @@ func _run():
 		recipe_output="This recipe does not exist!"
 		print ("This recipe does not exist!")
 		return
-		
+	#Load data from the recipe file
 	itemData = Global_DataParser.load_data(url_database_recipe)
+	
 	#TYPE
 	recipe.push_back(itemData["type"]) #0
 	recipe_type = recipe[0]
+	
+	#GROUP
+	if itemData.has("group"):
+		recipe.push_back(itemData["group"]) #1
+		item_group = get_recipe_shapeless()[arrayModifier+1]
+	else:
+		arrayModifier = -1
+		item_group = "None"
 
 	match(recipe_type):#Shapless, Shaped or Smelting Recipe
-		"crafting_shaped":
-			#GROUP
-			if itemData.has("group"):
-				recipe.push_back(itemData["group"]) #1
-				item_group = get_recipe_shaped()[arrayModifier+1]
-			else:
-				arrayModifier = -1
-				item_group = "None"
-			
+		"crafting_shaped":			
 			#GET PATERN
 			var pattern = []
 			pattern = get_recipe_shaped()[arrayModifier+2]
@@ -97,18 +102,13 @@ func _run():
 			
 			
 			#STRING OUTPUT
-			recipe_output = "Type: "+String(recipe_type)+"\n"+"Group: "+String(item_group)+"\n\n"+"Input: "+String(inputString)+"\n"+"Output: "+"\n"+String(output_amount)+" "+String(output_item)
-		
+			recipe_output = "Type: "+String(recipe_type)+"\n"
+			recipe_output +="Group: "+String(item_group)+"\n\n"
+			recipe_output +="Input: "+"\n"+String(inputString)+"\n"
+			recipe_output +="Output: "+"\n"+String(output_amount)+" "+String(output_item)
+			
+			
 		"crafting_shapeless":
-				#SHAPELESS RECIPES
-				#GROUP
-				if itemData.has("group"):
-					recipe.push_back(itemData["group"]) #1
-					item_group = get_recipe_shapeless()[arrayModifier+1]
-				else:
-					arrayModifier = -1
-					item_group = "None"
-					
 				#INGREDIENTS / INPUT
 				#GET INGREDIENTS
 				var ingredients_list = []
@@ -116,7 +116,6 @@ func _run():
 				ingredients_list = get_recipe_shapeless()[arrayModifier+2]
 				input_amount.resize(ingredients_list.size())
 				input_item.resize(ingredients_list.size())
-				print(ingredients_list)
 				for a in ingredients_list.size():
 					if ingredients_list[a].has("item"):
 						input_item[a] = ingredients_list[a]["item"]
@@ -133,8 +132,34 @@ func _run():
 				else:#Othewise get output and set the output amount to 1.
 					output_amount = 1
 				#STRING OUTPUT
-				recipe_output = "Type: "+String(recipe_type)+"\n"+"Group: "+String(item_group)+"\n\n"+"Input: "+String(inputString)+"\n"+"Output: "+"\n"+String(output_amount)+" "+String(output_item)
+				recipe_output = "Type: "+String(recipe_type)+"\n"
+				recipe_output += "Group: "+String(item_group)+"\n\n"
+				recipe_output += "Input: "+String(inputString)+"\n"
+				recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)
 
+		"smelting":
+			var ingredients_list = []
+			ingredients_list = get_recipe_smelting()[arrayModifier+2]
+			input_amount.resize(ingredients_list.size())
+			input_item.resize(ingredients_list.size())
+			
+			output_item = get_recipe_smelting()[arrayModifier+3]
+			if ingredients_list.has("item"):
+				input_item[0] = ingredients_list["item"]
+			elif ingredients_list.has("tag"):
+				input_item[0] = ingredients_list["tag"]
+					#Create input item and amount strings
+			inputString = "1 "+ String(input_item[0])+"\n"
+			
+			cook_time = get_recipe_smelting()[arrayModifier+4]
+			smelt_xp = get_recipe_smelting()[arrayModifier+5]
+
+			recipe_output = "Type: "+String(recipe_type)+"\n"
+			recipe_output += "Group: "+String(item_group)+"\n\n"
+			recipe_output += "Input: "+"\n"+String(inputString)+"\n"
+			recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n"
+			recipe_output += "Cooktime: "+String(cook_time / 20)+" secs ( "+String(cook_time)+" ) ticks"+"\n"
+			recipe_output += "Experience: "+String(smelt_xp)
 #Functions
 func get_recipe_shapeless():
 	#INGREDIENTS / INPUT
@@ -176,6 +201,33 @@ func get_recipe_shaped():
 	#FUNCTION RETURN
 	return recipe
 	
+func get_recipe_smelting():
+	#INGREDIENTS / INPUT
+	recipe.push_back(itemData["ingredient"]) #2
+
+	#TAG
+	if itemData["ingredient"].has("tag"):
+		hasTag = true
+	else:
+		hasTag = false
+	
+	#RESULT / OUTPUT
+	recipe.push_back(itemData["result"]) #3
+
+
+	#COOK TIME
+	recipe.push_back(itemData["cookingtime"])#4
+	
+	#SMELT XP
+	if itemData.has("experience"):
+		recipe.push_back(itemData["experience"]) #5
+	
+	#RESULT / OUTPUT AMOUNT
+	#if !itemData["result"][0].has["count"]:
+	output_amount = 1
+
+	#FUNCTION RETURN
+	return recipe
 	
 	
 	
