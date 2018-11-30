@@ -18,6 +18,7 @@ var arrayModifier = 0 #Used when an recipe doesn't have a group and sets to one 
 var itemData = {}#Create a dictionary for temp items recipe data
 var recipe = []
 var database = []
+var modName
 
 func init(loadRecipe):
 	recipeToLoad = loadRecipe
@@ -36,6 +37,7 @@ func init(loadRecipe):
 	arrayModifier = 0 #Used when an recipe doesn't have a group and sets to one less then recipes with a group.
 	itemData = {}#Create a dictionary for temp items recipe data
 	recipe = []
+	var modName
 	
 func _run():
 	#DOES RECIPE EXIST? If not then skip with a print message.
@@ -106,11 +108,16 @@ func _run():
 				output_amount = 1
 			
 			
+			modName = String(_getModName(output_item)[0])
+			output_item = String(_getModName(output_item)[1])
+			
+			
 			#STRING OUTPUT
 			recipe_output = "Type: "+String(recipe_type)+"\n"
 			recipe_output +="Group: "+String(item_group)+"\n\n"
 			recipe_output +="Input: "+"\n"+String(inputString)+"\n"
-			recipe_output +="Output: "+"\n"+String(output_amount)+" "+String(output_item)
+			recipe_output +="Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n\n"
+			recipe_output +="Orgin: "+"\n"+String(modName)
 			
 			
 		"crafting_shapeless":
@@ -136,11 +143,16 @@ func _run():
 					output_amount = get_recipe_shapeless()[arrayModifier+3][1]
 				else:#Othewise get output and set the output amount to 1.
 					output_amount = 1
+					
+				modName = String(_getModName(output_item)[0])
+				output_item = String(_getModName(output_item)[1])
 				#STRING OUTPUT
 				recipe_output =  "Type: "+String(recipe_type)+"\n"
 				recipe_output += "Group: "+String(item_group)+"\n\n"
 				recipe_output += "Input: "+String(inputString)+"\n"
-				recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)
+				recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n\n"
+				recipe_output +="Orgin: "+"\n"+String(modName)
+
 
 		"smelting":
 			var ingredients_list = []
@@ -158,17 +170,18 @@ func _run():
 			
 			cook_time = get_recipe_smelting()[arrayModifier+4]
 			smelt_xp = get_recipe_smelting()[arrayModifier+5]
-			#var index = String(output_item).find(":")
-			#if index != -1:
-				#output_item = output_item.substr(index,output_item.left(index))
-				#print(output_item)
-
+			
+			
+			modName = String(_getModName(output_item)[0])
+			output_item = String(_getModName(output_item)[1])
+			
 			recipe_output =  "Type: "+String(recipe_type)+"\n"
 			recipe_output += "Group: "+String(item_group)+"\n\n"
 			recipe_output += "Input: "+"\n"+String(inputString)+"\n"
 			recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n"
 			recipe_output += "Cooktime: "+String(cook_time / 20)+" secs ( "+String(cook_time)+" ) ticks"+"\n"
-			recipe_output += "Experience: "+String(smelt_xp)
+			recipe_output += "Experience: "+String(smelt_xp)+"\n\n"
+			recipe_output +="Orgin: "+"\n"+String(modName)
 	_addRecipeToDatabase()
 #Functions
 func get_recipe_shapeless():
@@ -239,6 +252,15 @@ func get_recipe_smelting():
 	#FUNCTION RETURN
 	return recipe
 	
+	
+func _getModName(item):
+	var text = []
+	var index = String(item).find(":")
+	if index != -1:
+		text.push_front(item.right(index+1).replace("_"," "))
+		text.push_front(item.left(index).replace("_"," "))
+		print(text)
+	return text
 	
 func _addRecipeToDatabase():
 	var newDict = {"output_name":output_item,"output_amount":output_amount}

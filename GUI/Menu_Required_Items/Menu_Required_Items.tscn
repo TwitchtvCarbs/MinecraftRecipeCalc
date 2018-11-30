@@ -7,7 +7,7 @@
 [node name="Menu_Required_Items" type="Node"]
 
 script = ExtResource( 1 )
-maxItems = 4
+maxItems = 1
 
 [node name="ColorRect" type="ColorRect" parent="." index="0"]
 
