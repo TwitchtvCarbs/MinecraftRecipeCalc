@@ -2,6 +2,7 @@ extends Node
 var recipeToLoad = "stone_slab"
 
 var url_database_recipe = "res://Recipes//1.13.2 JsonRecipes//"+String(recipeToLoad)+".json"
+var recipe_database = "res://Database//Recipe_Database.json"
 var recipe_type
 var recipe_output
 var input_item = []
@@ -16,6 +17,7 @@ var hasTag
 var arrayModifier = 0 #Used when an recipe doesn't have a group and sets to one less then recipes with a group.
 var itemData = {}#Create a dictionary for temp items recipe data
 var recipe = []
+var database = []
 
 func init(loadRecipe):
 	recipeToLoad = loadRecipe
@@ -52,7 +54,10 @@ func _run():
 	#GROUP
 	if itemData.has("group"):
 		recipe.push_back(itemData["group"]) #1
-		item_group = get_recipe_shapeless()[arrayModifier+1]
+		if recipe_type == "crafting_shapeless":
+			item_group = get_recipe_shapeless()[arrayModifier+1]
+		elif recipe_type =="crafting_shaped":
+			item_group = get_recipe_shaped()[arrayModifier+1]
 	else:
 		arrayModifier = -1
 		item_group = "None"
@@ -153,6 +158,10 @@ func _run():
 			
 			cook_time = get_recipe_smelting()[arrayModifier+4]
 			smelt_xp = get_recipe_smelting()[arrayModifier+5]
+			#var index = String(output_item).find(":")
+			#if index != -1:
+				#output_item = output_item.substr(index,output_item.left(index))
+				#print(output_item)
 
 			recipe_output =  "Type: "+String(recipe_type)+"\n"
 			recipe_output += "Group: "+String(item_group)+"\n\n"
@@ -160,6 +169,7 @@ func _run():
 			recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n"
 			recipe_output += "Cooktime: "+String(cook_time / 20)+" secs ( "+String(cook_time)+" ) ticks"+"\n"
 			recipe_output += "Experience: "+String(smelt_xp)
+	_addRecipeToDatabase()
 #Functions
 func get_recipe_shapeless():
 	#INGREDIENTS / INPUT
@@ -230,7 +240,10 @@ func get_recipe_smelting():
 	return recipe
 	
 	
-	
+func _addRecipeToDatabase():
+	var newDict = {"output_name":output_item,"output_amount":output_amount}
+	database.push_back(newDict)
+	Global_DataParser.write_data(recipe_database,database)
 	
 	
 	
