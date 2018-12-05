@@ -1,17 +1,13 @@
 extends Node
 
-# class member variables go here, for example:
-# var a = 2
-# var b = "textvar"
-
 func _ready():
 	pass
 
 
 func _on_LineEdit_text_entered(new_text):
-	_getRecipeInfo(new_text)
+	_getRecipeInfo(new_text.to_lower())
 	if !Global_Recipe_Create_Database.recipe_output == "This recipe does not exist!":
-		$VBox/OptionButton.add_item(new_text)
+		$VBox/OptionButton.add_item(new_text.to_lower())
 	pass # replace with function body
 
 
