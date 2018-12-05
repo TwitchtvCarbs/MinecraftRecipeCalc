@@ -21,6 +21,7 @@ var recipe = []
 var database = []
 var modName
 var recipeCount =_getAllRecipes()[0]
+var loadedRecipes = 0
 
 func init(loadRecipe):
 	recipeToLoad = loadRecipe
@@ -42,10 +43,11 @@ func init(loadRecipe):
 	var modName
 	
 func _ready():
-	#for a in _getAllRecipes()[0]:
-		#init(String(_getAllRecipes()[1][a]))
-		#_run()
-		pass
+	#load in all recipes
+	for a in _getAllRecipes()[0]:
+		init(String(_getAllRecipes()[1][a]))
+		_run()
+		loadedRecipes = loadedRecipes+1
 		
 func _run():
 	#DOES RECIPE EXIST? If not then skip with a print message.
@@ -134,27 +136,35 @@ func _run():
 				var ingredients_list = []
 				
 				ingredients_list = get_recipe_shapeless()[arrayModifier+2]
-				#input_amount.resize(ingredients_list.size())
-				#input_item.resize(ingredients_list.size())
 				for a in ingredients_list.size():
 					if ingredients_list[a].has("item"):
-						if input_item.has(ingredients_list[a]["item"]):
-							continue
+						#Does input_item already have this material in its array?
+						if input_item.has(ingredients_list[a]["item"]): 
+							continue #if so then go to the next material
 						else:
 							var count = 0
 							for b in ingredients_list.size():
+								#Check if the material is a dictionary
+								if typeof(ingredients_list[b]) != TYPE_DICTIONARY:
+									#for x in ingredients_list[b].size():
+										#input_item.append(ingredients_list[b][x]["item"])
+										#input_amount.append(count)
+									continue #if so go to the next material
 								if(ingredients_list[a]["item"] == ingredients_list[b]["item"]):
 									count = count + 1
-							input_item.append(ingredients_list[a]["item"])
-							input_amount.append(count)
+							input_item.append(ingredients_list[a]["item"]) #add material to array
+							input_amount.append(count) #with it's amount
 							
 					elif ingredients_list[a].has("tag"):
-						if input_item[a].has(ingredients_list[a]["tag"]):
+						if input_item.has(ingredients_list[a]["tag"]):
 							continue
 						else:
 							var count = 0
 							for b in ingredients_list.size():
-								if (ingredients_list[a]["tag"] == ingredients_list[b]["item"]):
+								#Check if the material is a dictionary
+								if typeof(ingredients_list[b]) != TYPE_DICTIONARY:
+									continue #if so go to the next material
+								if (ingredients_list[a]["tag"] == ingredients_list[b]["tag"]):
 									count = count + 1
 							input_item.append(ingredients_list[a]["tag"])
 							input_amount.append(count)
@@ -183,16 +193,17 @@ func _run():
 		"smelting":
 			var ingredients_list = []
 			ingredients_list = get_recipe_smelting()[arrayModifier+2]
-			input_amount.resize(ingredients_list.size())
-			input_item.resize(ingredients_list.size())
+			if ingredients_list.size()>1:
+				print("This is an or recipe with multiple options for inputs.")
 			
 			output_item = get_recipe_smelting()[arrayModifier+3]
-			if ingredients_list.has("item"):
-				input_item[0] = ingredients_list["item"]
-			elif ingredients_list.has("tag"):
-				input_item[0] = ingredients_list["tag"]
+			for a in ingredients_list.size():
+				if ingredients_list.has("item"):
+					input_item.append(ingredients_list["item"])
+				elif ingredients_list.has("tag"):
+					input_item.append(ingredients_list["tag"])
 					#Create input item and amount strings
-			inputString = String(input_amount[0])+" "+ String(input_item[0])+"\n"
+				inputString += String(1)+" "+String(input_item[a])+" or"+"\n"
 			
 			cook_time = get_recipe_smelting()[arrayModifier+4]
 			smelt_xp = get_recipe_smelting()[arrayModifier+5]
@@ -284,7 +295,6 @@ func _getModName(item):
 	if index != -1:
 		text.push_front(item.right(index+1).replace("_"," "))
 		text.push_front(item.left(index).replace("_"," "))
-		print(text)
 	return text
 	
 func _addRecipeToDatabase():
