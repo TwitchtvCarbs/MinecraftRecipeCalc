@@ -1,7 +1,8 @@
 extends Node
 var recipeToLoad = "stone_slab"
+var recipeFolder = "res://Recipes//1.13.2 JsonRecipes//"
 
-var url_database_recipe = "res://Recipes//1.13.2 JsonRecipes//"+String(recipeToLoad)+".json"
+var url_database_recipe = recipeFolder+String(recipeToLoad)+".json"
 var recipe_database = "res://Database//Recipe_Database.json"
 var recipe_type
 var recipe_output
@@ -19,6 +20,7 @@ var itemData = {}#Create a dictionary for temp items recipe data
 var recipe = []
 var database = []
 var modName
+var recipeCount =_getAllRecipes()[0]
 
 func init(loadRecipe):
 	recipeToLoad = loadRecipe
@@ -39,6 +41,12 @@ func init(loadRecipe):
 	recipe = []
 	var modName
 	
+func _ready():
+	#for a in _getAllRecipes()[0]:
+		#init(String(_getAllRecipes()[1][a]))
+		#_run()
+		pass
+		
 func _run():
 	#DOES RECIPE EXIST? If not then skip with a print message.
 	var file2check = File.new()
@@ -113,11 +121,11 @@ func _run():
 			
 			
 			#STRING OUTPUT
-			recipe_output = "Type: "+String(recipe_type)+"\n"
-			recipe_output +="Group: "+String(item_group)+"\n\n"
-			recipe_output +="Input: "+"\n"+String(inputString)+"\n"
-			recipe_output +="Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n\n"
-			recipe_output +="Orgin: "+"\n"+String(modName)
+			recipe_output =  "Type: "+String(recipe_type)+"\n"
+			recipe_output += "Group: "+String(item_group)+"\n\n"
+			recipe_output += "Input: "+"\n"+String(inputString)+"\n"
+			recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n\n"
+			recipe_output += "Orgin: "+"\n"+String(modName)
 			
 			
 		"crafting_shapeless":
@@ -126,15 +134,33 @@ func _run():
 				var ingredients_list = []
 				
 				ingredients_list = get_recipe_shapeless()[arrayModifier+2]
-				input_amount.resize(ingredients_list.size())
-				input_item.resize(ingredients_list.size())
+				#input_amount.resize(ingredients_list.size())
+				#input_item.resize(ingredients_list.size())
 				for a in ingredients_list.size():
 					if ingredients_list[a].has("item"):
-						input_item[a] = ingredients_list[a]["item"]
+						if input_item.has(ingredients_list[a]["item"]):
+							continue
+						else:
+							var count = 0
+							for b in ingredients_list.size():
+								if(ingredients_list[a]["item"] == ingredients_list[b]["item"]):
+									count = count + 1
+							input_item.append(ingredients_list[a]["item"])
+							input_amount.append(count)
+							
 					elif ingredients_list[a].has("tag"):
-						input_item[a] = ingredients_list[a]["tag"]
+						if input_item[a].has(ingredients_list[a]["tag"]):
+							continue
+						else:
+							var count = 0
+							for b in ingredients_list.size():
+								if (ingredients_list[a]["tag"] == ingredients_list[b]["item"]):
+									count = count + 1
+							input_item.append(ingredients_list[a]["tag"])
+							input_amount.append(count)
 					#Create input item and amount strings
-					inputString += "1 "+ String(input_item[a])+"\n"
+				for c in input_item.size():
+					inputString += String(input_amount[c])+" "+String(input_item[c])+"\n"
 					
 				#RESULT / OUTPUT
 				output_item = get_recipe_shapeless()[arrayModifier+3][0]
@@ -151,7 +177,7 @@ func _run():
 				recipe_output += "Group: "+String(item_group)+"\n\n"
 				recipe_output += "Input: "+String(inputString)+"\n"
 				recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n\n"
-				recipe_output +="Orgin: "+"\n"+String(modName)
+				recipe_output += "Orgin: "+"\n"+String(modName)
 
 
 		"smelting":
@@ -166,7 +192,7 @@ func _run():
 			elif ingredients_list.has("tag"):
 				input_item[0] = ingredients_list["tag"]
 					#Create input item and amount strings
-			inputString = "1 "+ String(input_item[0])+"\n"
+			inputString = String(input_amount[0])+" "+ String(input_item[0])+"\n"
 			
 			cook_time = get_recipe_smelting()[arrayModifier+4]
 			smelt_xp = get_recipe_smelting()[arrayModifier+5]
@@ -181,13 +207,12 @@ func _run():
 			recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n"
 			recipe_output += "Cooktime: "+String(cook_time / 20)+" secs ( "+String(cook_time)+" ) ticks"+"\n"
 			recipe_output += "Experience: "+String(smelt_xp)+"\n\n"
-			recipe_output +="Orgin: "+"\n"+String(modName)
+			recipe_output += "Orgin: "+"\n"+String(modName)
 	_addRecipeToDatabase()
 #Functions
 func get_recipe_shapeless():
 	#INGREDIENTS / INPUT
 	recipe.push_back(itemData["ingredients"]) #2
-
 	#TAG
 	if itemData["ingredients"][0].has("tag"):
 		hasTag = true
@@ -263,9 +288,34 @@ func _getModName(item):
 	return text
 	
 func _addRecipeToDatabase():
-	var newDict = {"output_name":output_item,"output_amount":output_amount}
+	var newDict = {"output_name":output_item,
+				   "output_amount":output_amount,
+				   "input_items":input_item,
+				   "input_amount":input_amount,
+				   "modname":modName}
 	database.push_back(newDict)
 	Global_DataParser.write_data(recipe_database,database)
+	
+func _getAllRecipes():
+	var files = []
+	var totalRecipes = [null,null]
+	var dir = Directory.new()
+	dir.open(recipeFolder)
+	dir.list_dir_begin()
+	
+	while true:
+		var file = dir.get_next()
+		if file =="":
+			break
+		elif not file.begins_with("."):
+			var index = String(file).find(".")
+			
+			files.append(String(file).left(index))
+			
+	dir.list_dir_end()
+	totalRecipes.push_front(files)
+	totalRecipes.push_front(files.size())
+	return totalRecipes
 	
 	
 	

@@ -4,17 +4,22 @@ var menuItemScene
 var instancedItem = []
 var itemData = []
 
-func _ready():
+func _ready():	
+	pass
+	
+	
+func _setOutputInfo(id,name,amount,modname):
+	instancedItem[id]._setName(name)
+	instancedItem[id]._setAmount(amount)
+	instancedItem[id]._setModName(modname)
+	
+func _updateGUI():
 	menuItemScene = load("res://GUI/Menu_Required_Items/MenuItem.tscn")
-	itemData.resize(maxItems)
+	itemData = Global_DataParser.load_data("res://Database//Recipe_Database.json")
+	maxItems = itemData.size()
+	print(maxItems)
 	for a in maxItems:
 		instancedItem.push_back(menuItemScene.instance())
 		$Margin/VBox/Items.add_child(instancedItem[a])
-		itemData = Global_DataParser.load_data("res://Database//Recipe_Database.json")
 		print(itemData)
-		_setInfo(a,itemData[a]["output_name"],itemData[a]["output_amount"])
-	
-	
-func _setInfo(id,name,amount):
-	instancedItem[id]._setName(name)
-	instancedItem[id]._setAmount(amount)
+		_setOutputInfo(a,itemData[a]["output_name"],itemData[a]["output_amount"],itemData[a]["modname"])

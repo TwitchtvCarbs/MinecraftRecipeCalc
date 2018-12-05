@@ -15,7 +15,11 @@ func _ready():
 #	pass
 
 func _setName(name):
-	$HBox/ItemName.text = name
+	$HBox/VBox/ItemName.text = name
 	
 func _setAmount(amount):
 	$HBox/ItemIconBG/ItemIconNumber/IconNumber.text = String(amount)
+
+func _setModName(modname):
+	$HBox/VBox/ModName.text = modname
+	pass

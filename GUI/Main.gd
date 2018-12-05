@@ -22,3 +22,4 @@ func _getRecipeInfo(recipe):
 	Global_Recipe_Create_Database._run()
 	$VBox/Label.text = Global_Recipe_Create_Database.recipe_output
 	$VBox/LineEdit.text=""
+	$VBox/Menu_Required_Items._updateGUI()
