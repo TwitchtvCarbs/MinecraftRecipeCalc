@@ -298,6 +298,7 @@ func _getModName(item):
 	return text
 	
 func _addRecipeToDatabase():
+	
 	var newDict = {"output_name":output_item,
 				   "output_amount":output_amount,
 				   "input_items":input_item,
