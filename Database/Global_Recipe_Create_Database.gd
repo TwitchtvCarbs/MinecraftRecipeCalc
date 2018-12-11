@@ -44,10 +44,11 @@ func init(loadRecipe):
 	
 func _ready():
 	#load in all recipes
-	for a in _getAllRecipes()[0]:
-		init(String(_getAllRecipes()[1][a]))
-		_run()
-		loadedRecipes = loadedRecipes+1
+#	for a in _getAllRecipes()[0]:
+#		init(String(_getAllRecipes()[1][a]))
+#		_run()
+#		loadedRecipes = loadedRecipes+1
+	pass
 		
 func _run():
 	#DOES RECIPE EXIST? If not then skip with a print message.
@@ -193,8 +194,6 @@ func _run():
 		"smelting":
 			var ingredients_list = []
 			ingredients_list = get_recipe_smelting()[arrayModifier+2]
-			if ingredients_list.size()>1:
-				print("This is an or recipe with multiple options for inputs.")
 			
 			output_item = get_recipe_smelting()[arrayModifier+3]
 			for a in ingredients_list.size():
@@ -203,7 +202,11 @@ func _run():
 				elif ingredients_list.has("tag"):
 					input_item.append(ingredients_list["tag"])
 					#Create input item and amount strings
-				inputString += String(1)+" "+String(input_item[a])+" or"+"\n"
+				if ingredients_list.size()>1:
+					print("This is an or recipe with multiple options for inputs.")
+					inputString += String(1)+" "+String(input_item[a])+" or"+"\n"
+				else:
+					inputString += String(1)+" "+String(input_item[a])+"\n"
 			
 			cook_time = get_recipe_smelting()[arrayModifier+4]
 			smelt_xp = get_recipe_smelting()[arrayModifier+5]
