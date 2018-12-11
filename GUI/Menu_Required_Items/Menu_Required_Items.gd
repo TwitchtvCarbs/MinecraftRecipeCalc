@@ -22,13 +22,11 @@ func _setInputInfo(id,name,amount,modname):
 	instancedInputItems[id]._setModName(modname)
 	pass
 	
-func _updateGUIOutput():
+func _updateGUIOutput(recipe):
 	itemOutputData = Global_DataParser.load_data("res://Database//Recipe_Database.json")
-	maxItems = itemOutputData.size()
-	for a in maxItems:
-		instancedOutputItem.push_back(menuItemScene.instance())
-		$Margin/VBox/Items.add_child(instancedOutputItem[a])
-		_setOutputInfo(a,itemOutputData[a]["output_name"],itemOutputData[a]["output_amount"],itemOutputData[a]["modname"])
+	instancedOutputItem.push_back(menuItemScene.instance())
+	$Margin/VBox/Items.add_child(instancedOutputItem[0])
+	_setOutputInfo(0,itemOutputData[0]["output_name"],itemOutputData[0]["output_amount"],itemOutputData[0]["output_modname"])
 
 func _updateGUIInputs():
 	

@@ -8,18 +8,19 @@ var recipe_type
 var recipe_output
 var input_item = []
 var input_amount = []
+var input_modName = []
 var cook_time
 var smelt_xp
 var inputString = "\n"
 var output_item
 var output_amount
+var output_modName
 var item_group
 var hasTag
 var arrayModifier = 0 #Used when an recipe doesn't have a group and sets to one less then recipes with a group.
 var itemData = {}#Create a dictionary for temp items recipe data
 var recipe = []
 var database = []
-var modName
 var recipeCount =_getAllRecipes()[0]
 var loadedRecipes = 0
 
@@ -40,7 +41,8 @@ func init(loadRecipe):
 	arrayModifier = 0 #Used when an recipe doesn't have a group and sets to one less then recipes with a group.
 	itemData = {}#Create a dictionary for temp items recipe data
 	recipe = []
-	var modName
+	var output_modName
+	var input_modname = []
 	
 func _ready():
 	#load in all recipes
@@ -89,6 +91,7 @@ func _run():
 			#Resize input_amount to fit all the diffrent materials in recipe.
 			input_amount.resize(keys.size())
 			input_item.resize(keys.size())
+			input_modName.resize(keys.size())
 
 			#Break the pattern down in to a single letter array.
 			for x in pattern.size():
@@ -102,11 +105,17 @@ func _run():
 					
 			#What are the input items?
 			for a in keys.size():
+				var tempInputMN
 				if get_recipe_shaped()[arrayModifier+3].values()[a].has("item"):
 					input_item[a] = get_recipe_shaped()[arrayModifier+3].values()[a]["item"]
 				elif get_recipe_shaped()[arrayModifier+3].values()[a].has("tag"):
 					input_item[a] = get_recipe_shaped()[arrayModifier+3].values()[a]["tag"]
-				#Create input item and amount string.
+				tempInputMN = String(input_item[a])
+				print(tempInputMN)
+				#set the mod name and subtract it from the display name.
+				input_modName[a] = String(_getModName(tempInputMN)[0])
+				input_item[a] = String(_getModName(tempInputMN)[1])
+					#Create input item and amount string.
 				inputString += String(input_amount[a])+" "+ String(input_item[a])+"\n"
 				
 			
@@ -119,7 +128,7 @@ func _run():
 				output_amount = 1
 			
 			
-			modName = String(_getModName(output_item)[0])
+			output_modName = String(_getModName(output_item)[0])
 			output_item = String(_getModName(output_item)[1])
 			
 			
@@ -127,8 +136,9 @@ func _run():
 			recipe_output =  "Type: "+String(recipe_type)+"\n"
 			recipe_output += "Group: "+String(item_group)+"\n\n"
 			recipe_output += "Input: "+"\n"+String(inputString)+"\n"
+			recipe_output += "Input_Orgin"+"\n"+String(input_modName)+"\n"
 			recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n\n"
-			recipe_output += "Orgin: "+"\n"+String(modName)
+			recipe_output += "Orgin: "+"\n"+String(output_modName)
 			
 			
 		"crafting_shapeless":
@@ -181,14 +191,14 @@ func _run():
 				else:#Othewise get output and set the output amount to 1.
 					output_amount = 1
 					
-				modName = String(_getModName(output_item)[0])
+				output_modName = String(_getModName(output_item)[0])
 				output_item = String(_getModName(output_item)[1])
 				#STRING OUTPUT
 				recipe_output =  "Type: "+String(recipe_type)+"\n"
 				recipe_output += "Group: "+String(item_group)+"\n\n"
 				recipe_output += "Input: "+String(inputString)+"\n"
 				recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n\n"
-				recipe_output += "Orgin: "+"\n"+String(modName)
+				recipe_output += "Orgin: "+"\n"+String(output_modName)
 
 
 		"smelting":
@@ -212,7 +222,7 @@ func _run():
 			smelt_xp = get_recipe_smelting()[arrayModifier+5]
 			
 			
-			modName = String(_getModName(output_item)[0])
+			output_modName = String(_getModName(output_item)[0])
 			output_item = String(_getModName(output_item)[1])
 			
 			recipe_output =  "Type: "+String(recipe_type)+"\n"
@@ -221,7 +231,7 @@ func _run():
 			recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n"
 			recipe_output += "Cooktime: "+String(cook_time / 20)+" secs ( "+String(cook_time)+" ) ticks"+"\n"
 			recipe_output += "Experience: "+String(smelt_xp)+"\n\n"
-			recipe_output += "Orgin: "+"\n"+String(modName)
+			recipe_output += "Orgin: "+"\n"+String(output_modName)
 	_addRecipeToDatabase()
 #Functions
 func get_recipe_shapeless():
@@ -298,15 +308,17 @@ func _getModName(item):
 	if index != -1:
 		text.push_front(item.right(index+1).replace("_"," "))
 		text.push_front(item.left(index).replace("_"," "))
+		print(text)
 	return text
 	
 func _addRecipeToDatabase():
 	
-	var newDict = {"output_name":output_item,
-				   "output_amount":output_amount,
+	var newDict = {"input_modname":input_modName,
 				   "input_items":input_item,
 				   "input_amount":input_amount,
-				   "modname":modName}
+				   "output_modname":output_modName,
+				   "output_name":output_item,
+				   "output_amount":output_amount,}
 	database.push_back(newDict)
 	Global_DataParser.write_data(recipe_database,database)
 	
