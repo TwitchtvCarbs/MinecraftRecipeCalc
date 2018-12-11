@@ -105,7 +105,7 @@ func _run():
 					
 			#What are the input items?
 			for a in keys.size():
-				var tempInputMN
+				var tempInputMN #What is the item, we need this for grabing the mod name.
 				if get_recipe_shaped()[arrayModifier+3].values()[a].has("item"):
 					input_item[a] = get_recipe_shaped()[arrayModifier+3].values()[a]["item"]
 				elif get_recipe_shaped()[arrayModifier+3].values()[a].has("tag"):
@@ -136,21 +136,22 @@ func _run():
 			recipe_output =  "Type: "+String(recipe_type)+"\n"
 			recipe_output += "Group: "+String(item_group)+"\n\n"
 			recipe_output += "Input: "+"\n"+String(inputString)+"\n"
-			recipe_output += "Input_Orgin"+"\n"+String(input_modName)+"\n"
+			recipe_output += "Input_Orgin"+"\n"+String(input_modName)+"\n\n"
 			recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n\n"
-			recipe_output += "Orgin: "+"\n"+String(output_modName)
+			recipe_output += "Output_Orgin: "+"\n"+String(output_modName)
 			
 			
 		"crafting_shapeless":
 				#INGREDIENTS / INPUT
 				#GET INGREDIENTS
 				var ingredients_list = []
+				var tempInputMN  #What is the item, we need this for grabing the mod name.
 				
 				ingredients_list = get_recipe_shapeless()[arrayModifier+2]
 				for a in ingredients_list.size():
 					if ingredients_list[a].has("item"):
 						#Does input_item already have this material in its array?
-						if input_item.has(ingredients_list[a]["item"]): 
+						if input_item.has(ingredients_list[a]["item"]) or input_item.has(tempInputMN): 
 							continue #if so then go to the next material
 						else:
 							var count = 0
@@ -163,11 +164,13 @@ func _run():
 									continue #if so go to the next material
 								if(ingredients_list[a]["item"] == ingredients_list[b]["item"]):
 									count = count + 1
-							input_item.append(ingredients_list[a]["item"]) #add material to array
+							tempInputMN = ingredients_list[a]["item"]
+							input_modName.append(_getModName(tempInputMN)[0])#get material mod name and add it to the array
+							input_item.append(_getModName(tempInputMN)[1]) #add material to array
 							input_amount.append(count) #with it's amount
 							
 					elif ingredients_list[a].has("tag"):
-						if input_item.has(ingredients_list[a]["tag"]):
+						if input_item.has(ingredients_list[a]["tag"])or input_item.has(tempInputMN):
 							continue
 						else:
 							var count = 0
@@ -177,7 +180,10 @@ func _run():
 									continue #if so go to the next material
 								if (ingredients_list[a]["tag"] == ingredients_list[b]["tag"]):
 									count = count + 1
-							input_item.append(ingredients_list[a]["tag"])
+							tempInputMN = ingredients_list[a]["tag"]
+							#SHOULD REALLY GET MOD NAME STORE IT AND USE THEM HERE INSTEAD OF RUNNING THE FUNTION TWICE.
+							input_modName.append(_getModName(tempInputMN)[0])
+							input_item.append(_getModName(tempInputMN)[1])
 							input_amount.append(count)
 					#Create input item and amount strings
 				for c in input_item.size():
@@ -197,21 +203,26 @@ func _run():
 				recipe_output =  "Type: "+String(recipe_type)+"\n"
 				recipe_output += "Group: "+String(item_group)+"\n\n"
 				recipe_output += "Input: "+String(inputString)+"\n"
+				recipe_output += "Input_Orgin: "+String(input_modName)+"\n\n"
 				recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n\n"
-				recipe_output += "Orgin: "+"\n"+String(output_modName)
+				recipe_output += "Output_Orgin: "+"\n"+String(output_modName)
 
 
 		"smelting":
 			var ingredients_list = []
+			var tempInputMN
 			ingredients_list = get_recipe_smelting()[arrayModifier+2]
 			
 			output_item = get_recipe_smelting()[arrayModifier+3]
 			for a in ingredients_list.size():
 				if ingredients_list.has("item"):
-					input_item.append(ingredients_list["item"])
+					tempInputMN = ingredients_list["item"]
 				elif ingredients_list.has("tag"):
-					input_item.append(ingredients_list["tag"])
-					#Create input item and amount strings
+					tempInputMN = (ingredients_list["tag"])
+				#grab mod name and seprate it from the material name. Inputs.
+				input_modName.append(_getModName(tempInputMN)[0])
+				input_item.append(_getModName(tempInputMN)[1])
+				#Create input item and amount strings
 				if ingredients_list.size()>1:
 					print("This is an or recipe with multiple options for inputs.")
 					inputString += String(1)+" "+String(input_item[a])+" or"+"\n"
@@ -221,17 +232,18 @@ func _run():
 			cook_time = get_recipe_smelting()[arrayModifier+4]
 			smelt_xp = get_recipe_smelting()[arrayModifier+5]
 			
-			
+			#grab mod name and seprate it from the material name. Outputs.
 			output_modName = String(_getModName(output_item)[0])
 			output_item = String(_getModName(output_item)[1])
 			
 			recipe_output =  "Type: "+String(recipe_type)+"\n"
 			recipe_output += "Group: "+String(item_group)+"\n\n"
 			recipe_output += "Input: "+"\n"+String(inputString)+"\n"
+			recipe_output += "Input_Orgin: "+"\n"+String(input_modName)+"\n\n"
 			recipe_output += "Output: "+"\n"+String(output_amount)+" "+String(output_item)+"\n"
 			recipe_output += "Cooktime: "+String(cook_time / 20)+" secs ( "+String(cook_time)+" ) ticks"+"\n"
 			recipe_output += "Experience: "+String(smelt_xp)+"\n\n"
-			recipe_output += "Orgin: "+"\n"+String(output_modName)
+			recipe_output += "Output_Orgin: "+"\n"+String(output_modName)
 	_addRecipeToDatabase()
 #Functions
 func get_recipe_shapeless():
