@@ -17,12 +17,12 @@ var output_amount
 var output_modName
 var item_group
 var hasTag
-var arrayModifier = 0 #Used when an recipe doesn't have a group and sets to one less then recipes with a group.
+var arrayModifier #Used when an recipe doesn't have a group and sets to one less then recipes with a group.
 var itemData = {}#Create a dictionary for temp items recipe data
 var recipe = []
 var database = []
 var recipeCount =_getAllRecipes()[0]
-var loadedRecipes = 0
+var loadedRecipes
 
 func init(loadRecipe):
 	recipeToLoad = loadRecipe
@@ -111,7 +111,6 @@ func _run():
 				elif get_recipe_shaped()[arrayModifier+3].values()[a].has("tag"):
 					input_item[a] = get_recipe_shaped()[arrayModifier+3].values()[a]["tag"]
 				tempInputMN = String(input_item[a])
-				print(tempInputMN)
 				#set the mod name and subtract it from the display name.
 				input_modName[a] = String(_getModName(tempInputMN)[0])
 				input_item[a] = String(_getModName(tempInputMN)[1])
@@ -320,7 +319,6 @@ func _getModName(item):
 	if index != -1:
 		text.push_front(item.right(index+1).replace("_"," "))
 		text.push_front(item.left(index).replace("_"," "))
-		print(text)
 	return text
 	
 func _addRecipeToDatabase():

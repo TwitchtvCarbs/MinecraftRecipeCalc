@@ -1,1 +1,1 @@
-[{"input_amount":[],"input_items":["sand"],"input_modname":["minecraft"],"output_amount":1,"output_modname":"minecraft","output_name":"glass"}]
+[{"input_amount":[1,4,3,1],"input_items":["redstone","cobblestone","planks","iron ingot"],"input_modname":["minecraft","minecraft","minecraft","minecraft"],"output_amount":1,"output_modname":"minecraft","output_name":"piston"}]
