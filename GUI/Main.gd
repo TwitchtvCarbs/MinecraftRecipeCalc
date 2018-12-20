@@ -28,11 +28,11 @@ func _on_OptionButton_item_selected(ID):
 	
 	
 func _getRecipeInfo(recipe):
-	Global_Recipe_Create_Database.init(recipe)
-	Global_Recipe_Create_Database._run()
-	$VBox/debugPrintout.text = Global_Recipe_Create_Database.recipe_output
+	#Global_Recipe_Create_Database.init(recipe)
+	#Global_Recipe_Create_Database._run()
+	#$VBox/debugPrintout.text = Global_Recipe_Create_Database.recipe_output
 	$VBox/HBox/LineEdit.text=""
-	$VBox/Menu_Required_Items._updateGUIOutput(recipe)
+	$VBox/Menu_Required_Items._updateGUIInputs(recipe.replace("_"," "))
 
 
 

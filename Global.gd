@@ -1,2 +1,2 @@
 extends Node
-var outputMultiplyer = 0
+var outputMultiplyer = 1

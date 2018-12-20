@@ -22,7 +22,7 @@ var itemData = {}#Create a dictionary for temp items recipe data
 var recipe = []
 var database = []
 var recipeCount =_getAllRecipes()[0]
-var loadedRecipes
+var loadedRecipes = 0
 
 func init(loadRecipe):
 	recipeToLoad = loadRecipe
@@ -46,10 +46,10 @@ func init(loadRecipe):
 	
 func _ready():
 	#load in all recipes
-#	for a in _getAllRecipes()[0]:
-#		init(String(_getAllRecipes()[1][a]))
-#		_run()
-#		loadedRecipes = loadedRecipes+1
+	for a in _getAllRecipes()[0]:
+		init(String(_getAllRecipes()[1][a]))
+		_run()
+		loadedRecipes = loadedRecipes+1
 	pass
 		
 func _run():
