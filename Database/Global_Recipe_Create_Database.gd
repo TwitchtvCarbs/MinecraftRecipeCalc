@@ -45,13 +45,15 @@ func init(loadRecipe):
 	var input_modname = []
 	
 func _ready():
-	#load in all recipes
+	pass
+
+func _loadAllRecipes():
+		#load in all recipes
 	for a in _getAllRecipes()[0]:
 		init(String(_getAllRecipes()[1][a]))
 		_run()
 		loadedRecipes = loadedRecipes+1
-	pass
-		
+
 func _run():
 	#DOES RECIPE EXIST? If not then skip with a print message.
 	var file2check = File.new()

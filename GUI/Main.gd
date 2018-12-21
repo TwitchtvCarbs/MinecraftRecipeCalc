@@ -1,9 +1,6 @@
 extends Node
 var lastRecipe
 
-func _ready():
-	pass
-
 
 func _on_LineEdit_text_entered(new_text):
 	#var recentCount = $VBox/HBox/OptionButton.get_item_count()
@@ -18,13 +15,12 @@ func _on_LineEdit_text_entered(new_text):
 			#if $VBox/OptionButton.get_item_text(0) != new_text or $VBox/RecentRecipeBox/OptionButton.get_item_text(0) !=tempText:
 				$VBox/OptionButton.add_item(tempText.to_lower())
 				lastRecipe = tempText.to_lower()
-	pass # replace with function body
 
 
 func _on_OptionButton_item_selected(ID):
 	var recipeString = $VBox/OptionButton.get_item_text(ID)
 	_getRecipeInfo(recipeString)
-	pass # replace with function body
+	lastRecipe = recipeString
 	
 	
 func _getRecipeInfo(recipe):
@@ -41,4 +37,19 @@ func _on_outputMutiplier_value_changed(value):
 	Global.outputMultiplyer = floor(value)
 	if lastRecipe != null:
 		_getRecipeInfo(lastRecipe)
+
+
+func _on_LoadMCRecipes_pressed():
+	Global_Recipe_Create_Database._loadAllRecipes()
+
+
+
+func _on_AddRecipesToRecent_pressed():
+	for i in Global_Recipe_Create_Database.recipeCount:
+		$VBox/OptionButton.add_item(Global_Recipe_Create_Database._getAllRecipes()[1][i])
+	pass # replace with function body
+
+
+func _on_ClearRecent_pressed():
+	$VBox/OptionButton.clear()
 	pass # replace with function body
