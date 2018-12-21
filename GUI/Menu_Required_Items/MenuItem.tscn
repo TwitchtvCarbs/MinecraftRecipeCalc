@@ -65,7 +65,7 @@ anchor_bottom = 1.0
 margin_left = -55.0
 margin_top = -49.0
 margin_right = -7.0
-margin_bottom = -3.0
+margin_bottom = -2.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -95,7 +95,7 @@ valign = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-_sections_unfolded = [ "Material", "Theme", "Visibility", "custom_colors" ]
+_sections_unfolded = [ "Material", "Rect", "Theme", "Visibility", "custom_colors" ]
 
 [node name="ItemIconAdd" type="TextureRect" parent="HBox/ItemIconBG" index="1"]
 

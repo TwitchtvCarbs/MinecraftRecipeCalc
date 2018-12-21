@@ -45,9 +45,10 @@ func _on_LoadMCRecipes_pressed():
 
 
 func _on_AddRecipesToRecent_pressed():
-	for i in Global_Recipe_Create_Database.recipeCount:
-		$VBox/OptionButton.add_item(Global_Recipe_Create_Database._getAllRecipes()[1][i])
-	pass # replace with function body
+	if $VBox/OptionButton.get_item_count() == 0:
+		for i in Global_Recipe_Create_Database.recipeCount:
+			$VBox/OptionButton.add_item(Global_Recipe_Create_Database._getAllRecipes()[1][i])
+		$VBox/Buttons/RecipeCount.text = "Loaded Recipes: "+String(Global_Recipe_Create_Database.loadedRecipes)
 
 
 func _on_ClearRecent_pressed():
