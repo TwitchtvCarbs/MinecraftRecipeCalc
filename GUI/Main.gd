@@ -1,8 +1,7 @@
 extends Node
-
+var lastRecipe
 
 func _ready():
-	var outputMultiplier = $VBox/HBox/outputMutiplier
 	pass
 
 
@@ -18,6 +17,7 @@ func _on_LineEdit_text_entered(new_text):
 		#else:
 			#if $VBox/OptionButton.get_item_text(0) != new_text or $VBox/RecentRecipeBox/OptionButton.get_item_text(0) !=tempText:
 				$VBox/OptionButton.add_item(tempText.to_lower())
+				lastRecipe = tempText.to_lower()
 	pass # replace with function body
 
 
@@ -32,11 +32,13 @@ func _getRecipeInfo(recipe):
 	#Global_Recipe_Create_Database._run()
 	#$VBox/debugPrintout.text = Global_Recipe_Create_Database.recipe_output
 	$VBox/HBox/LineEdit.text=""
-	$VBox/Menu_Required_Items._updateGUIInputs(recipe.replace("_"," "))
+	$VBox/Menu_Required_Items._updateGUIOutput(recipe.replace("_"," "))
 
 
 
 
 func _on_outputMutiplier_value_changed(value):
 	Global.outputMultiplyer = floor(value)
+	if lastRecipe != null:
+		_getRecipeInfo(lastRecipe)
 	pass # replace with function body

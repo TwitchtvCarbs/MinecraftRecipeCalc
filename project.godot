@@ -23,9 +23,9 @@ Global="*res://Global.gd"
 [display]
 
 window/size/width=800
-window/size/height=800
+window/size/height=1000
 window/size/test_width=800
-window/size/test_height=800
+window/size/test_height=1000
 
 [editor_plugins]
 
