@@ -16,6 +16,7 @@ func _ready():
 
 func _setName(name):
 	$HBox/VBox/ItemName.text = name
+	$HBox/ItemIconBG/ItemIcon.texture = load("res://GUI//Menu_Images//Items//"+String(name).replace(" ","_")+".png")
 	
 func _setAmount(amount):
 	$HBox/ItemIconBG/ItemIconNumber/IconNumber.text = String(amount)
